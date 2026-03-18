@@ -210,6 +210,15 @@ export function buildQuestionTree(state: RequirementState): Map<string, Question
       phase: 'data',
       message: 'データソースを分析中...',
       type: 'info',
+      next: () => 'data-select-sources',
+    },
+    {
+      id: 'data-select-sources',
+      phase: 'data',
+      message: '上記の候補から、この施策で使用するデータを選んでください。',
+      type: 'multi-select',
+      options: [], // dynamically populated from suggestions
+      allowFreeInput: true,
       next: () => 'data-notes',
     },
     {
@@ -247,6 +256,15 @@ export function getDynamicOptions(questionId: string, state: RequirementState) {
         value: c.id,
         label: c.name,
         description: c.description,
+      }));
+    }
+  }
+  if (questionId === 'data-select-sources') {
+    if (state.data.suggestedSources.length > 0) {
+      return state.data.suggestedSources.map((s) => ({
+        value: `${s.tableName}.${s.columnName}`,
+        label: `${s.tableName}.${s.columnName}`,
+        description: s.matchReason,
       }));
     }
   }

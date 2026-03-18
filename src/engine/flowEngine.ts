@@ -174,6 +174,28 @@ export function processAnswer(
       }
       break;
     }
+    case 'data-select-sources': {
+      const selectedSources = answer.split(',').map((s) => s.trim()).filter(Boolean);
+      // Filter suggestedSources to only keep selected ones
+      const selected = newState.data.suggestedSources.filter(
+        (s) => selectedSources.includes(`${s.tableName}.${s.columnName}`)
+      );
+      // Also add any free-input entries
+      const existing = new Set(selected.map((s) => `${s.tableName}.${s.columnName}`));
+      selectedSources.forEach((src) => {
+        if (!existing.has(src)) {
+          const parts = src.split('.');
+          selected.push({
+            tableName: parts[0] || src,
+            columnName: parts[1] || '',
+            description: '',
+            matchReason: '手動追加',
+          });
+        }
+      });
+      newState.data = { ...newState.data, suggestedSources: selected };
+      break;
+    }
     case 'data-notes': {
       if (answer !== 'なし' && answer !== '' && answer !== 'skip') {
         newState.data = { ...newState.data, notes: answer };
