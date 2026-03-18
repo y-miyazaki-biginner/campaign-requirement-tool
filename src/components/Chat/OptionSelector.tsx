@@ -29,7 +29,7 @@ export function OptionSelector({ options, multiSelect, allowFreeInput, onSelect,
     }
   };
 
-  const handleSubmitMulti = () => {
+  const handleSubmit = () => {
     const values = [...selected];
     if (freeInput.trim()) {
       values.push(freeInput.trim());
@@ -38,6 +38,8 @@ export function OptionSelector({ options, multiSelect, allowFreeInput, onSelect,
       onSelect(values.join(','));
     }
   };
+
+  const canSubmit = selected.size > 0 || freeInput.trim().length > 0;
 
   return (
     <div className="mb-3 flex flex-col gap-2">
@@ -68,8 +70,12 @@ export function OptionSelector({ options, multiSelect, allowFreeInput, onSelect,
             placeholder="その他（自由入力）"
             className="flex-1 rounded-md border border-[#d8dde5] px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#00b4ed]/40 focus:border-[#00b4ed]"
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !multiSelect && freeInput.trim()) {
-                onSelect(freeInput.trim());
+              if (e.key === 'Enter') {
+                if (multiSelect) {
+                  handleSubmit();
+                } else if (freeInput.trim()) {
+                  onSelect(freeInput.trim());
+                }
               }
             }}
           />
@@ -77,8 +83,8 @@ export function OptionSelector({ options, multiSelect, allowFreeInput, onSelect,
       )}
       {multiSelect && (
         <button
-          onClick={handleSubmitMulti}
-          disabled={selected.size === 0 && !freeInput.trim()}
+          onClick={handleSubmit}
+          disabled={!canSubmit}
           className="self-end rounded-md bg-[#00b4ed] text-white px-5 py-2 text-[13px] font-medium hover:bg-[#0090d9] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           決定
