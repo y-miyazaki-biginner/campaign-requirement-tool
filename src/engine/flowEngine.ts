@@ -139,7 +139,7 @@ export function processAnswer(
       break;
     }
     case 'content-notes': {
-      if (answer !== 'なし' && answer !== '') {
+      if (answer !== 'なし' && answer !== '' && answer !== 'skip') {
         newState.content = { ...newState.content, notes: answer };
       }
       newState.currentPhase = 'timing';
@@ -162,7 +162,7 @@ export function processAnswer(
       break;
     }
     case 'timing-scenario-detail': {
-      if (answer !== 'なし' && answer !== '') {
+      if (answer !== 'なし' && answer !== '' && answer !== 'skip') {
         newState.timing = { ...newState.timing, scenarioDetails: answer };
       }
       newState.currentPhase = 'data';
@@ -175,7 +175,7 @@ export function processAnswer(
       break;
     }
     case 'data-notes': {
-      if (answer !== 'なし' && answer !== '') {
+      if (answer !== 'なし' && answer !== '' && answer !== 'skip') {
         newState.data = { ...newState.data, notes: answer };
       }
       newState.currentPhase = 'complete';

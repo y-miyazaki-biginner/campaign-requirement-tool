@@ -141,7 +141,19 @@ export function ChatContainer() {
             />
           )}
           {isWaitingForInput && lastMessage.type === 'text' && (
-            <TextInput onSubmit={handleAnswer} />
+            <div className="flex gap-2 items-start">
+              <div className="flex-1">
+                <TextInput onSubmit={handleAnswer} />
+              </div>
+              {lastMessage.options?.some((o) => o.value === 'skip') && (
+                <button
+                  onClick={() => handleAnswer('skip')}
+                  className="rounded-md bg-[#f7f8fa] text-[#8b95a5] px-4 py-2.5 text-[13px] font-medium hover:bg-[#eceef2] transition-all flex-shrink-0"
+                >
+                  スキップ
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}
